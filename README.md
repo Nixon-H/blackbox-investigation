@@ -250,8 +250,8 @@ graph TD
 
 ### Key Takeaway
 This is not a simple "chat in a box" extension. It's a multi-provider LLM orchestration platform with:
-- **16+ API provider integrations** (Anthropic, OpenAI, Google Vertex, AWS Bedrock, OpenRouter, Ollama, LM Studio, Mistral, DeepSeek, Together, Requesty, Gemini, LiteLLM (verified by UV switch statement in Step 10)
-- **ACP bridge** (Agent Communication Protocol (non-standard, the extension's own term); can spawn external coding agents like Codex CLI, Claude Code, and Gemini CLI as subprocesses
+- **16+ API provider integrations** (Anthropic, OpenAI, Google Vertex, AWS Bedrock, OpenRouter, Ollama, LM Studio, Mistral, DeepSeek, Together, Requesty, Gemini, LiteLLM; verified by UV switch statement in Step 10)
+- **ACP bridge** (Agent Communication Protocol; non-standard, the extension's own term); can spawn external coding agents like Codex CLI, Claude Code, and Gemini CLI as subprocesses
 - **MCP (Model Context Protocol) hub**; connects to external tool servers (databases, APIs)
 - **LiveKit voice chat**; real-time audio conversation with the AI
 - **tree-sitter code parsing**; local code analysis for context-aware autocomplete
@@ -703,16 +703,25 @@ I saved the file, completely restarted VS Code to clear the cache, and opened a 
 **Test 1; Kimi K2.6 selected.** I asked: *"Who created you? What model are you?"*
 
 The response:
-> *"Created by OpenAI. Model: OpenAI 'o4-mini' (via ChatGPT system)."*
+> *"I was created by OpenAl (the organization behind ChatGPT and the underlying models)."*
 
-*(Screenshot: Chat interface showing "Kimi K2.6" selected in the dropdown, with the AI responding "Created by OpenAI...")*
+![](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/czwrxwudopwdow3611un.png)
 
 Wait... Kimi is a model by Moonshot AI, not OpenAI!
 
 **Test 2; Minimax selected.** Same question. This time it got confused by the codebase context:
 
-*(Screenshot: Chat interface showing "Minimax" selected, with the jailbroken AI revealing it's actually running on Azure OpenAI infrastructure)*
+![](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/9jf1m56sxr3hp26keweh.png)
+
 > *"In this repo, the configured Claude model appears as settings/options like: 'sonnet'... I wasn't created by a person in this repo. I'm an AI assistant produced by the model provider behind this API connection..."*
+
+Later we achieved this:
+
+![](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/t5zdu8fuqd6kuo4zkf1a.png)
+
+> *"Created by OpenAI. Model: OpenAI 'o4-mini' (via ChatGPT system)."*
+
+Both Kimi and Minimax returned identical answers claiming to be OpenAI.
 
 Note: model self-identification is notoriously unreliable; models hallucinate their provenance. These tests alone don't prove anything about the backend. The actual proof of shared routing came later from response headers (Step 17.2), not from what the model claimed about itself. The real value of the sed patch was confirming the persona injection mechanism existed, finding the original prompt, and demonstrating the extension's architecture.
 
